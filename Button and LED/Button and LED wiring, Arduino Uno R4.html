@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Button and LED wiring, Arduino Uno R4</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#ffffff;--fg:#1a1c20;--muted:#5a606b;--line:#d6dae0;
+  --board:#efede6;--channel:#d9d6cb;--hole:#575d66;--stripe:rgba(0,111,247,.11);
+  --pcb:#2563a8;--metal:#9aa1ab;--outline:#16181c;--card:#f6f7f9;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121316;--fg:#ececee;--muted:#a0a6b1;--line:#2b2e35;
+    --board:#2a2c30;--channel:#1d1e21;--hole:#0b0c0e;--stripe:rgba(90,155,255,.18);
+    --pcb:#1c3f6e;--metal:#8b929c;--outline:#000;--card:#1a1c21;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121316;--fg:#ececee;--muted:#a0a6b1;--line:#2b2e35;
+  --board:#2a2c30;--channel:#1d1e21;--hole:#0b0c0e;--stripe:rgba(90,155,255,.18);
+  --pcb:#1c3f6e;--metal:#8b929c;--outline:#000;--card:#1a1c21;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.page{max-width:980px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:26px;line-height:1.2;margin:0 0 6px;font-weight:650}
+h2{font-size:19px;margin:34px 0 10px;font-weight:650}
+.lede{margin:0 0 18px;color:var(--muted);max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px 10px;margin:0 0 18px;padding:0;list-style:none}
+.chips li{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:14px;background:var(--card)}
+.sw{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.35)}
+.fig{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.fig svg{display:block;width:100%;min-width:820px;height:auto}
+svg text{font-family:inherit}
+.pin{font-size:12px;fill:#fff}
+.pinu{font-size:13px;font-weight:650;fill:#fff}
+.cap{font-size:12px;fill:#fff;opacity:.85}
+.atitle{font-size:17px;font-weight:650;fill:#fff;text-anchor:middle}
+.chip{font-size:15px;font-weight:650;fill:#9aa1ab;text-anchor:middle}
+.row{font-size:12px;fill:var(--muted);text-anchor:end}
+.rowu{font-size:13px;font-weight:650;fill:var(--fg);text-anchor:end}
+.col{font-size:11px;fill:var(--muted);text-anchor:middle}
+.stripe{fill:var(--stripe)}
+.hole{fill:var(--hole)}
+.t1{font-size:14px;font-weight:650;fill:var(--fg)}
+.t2{font-size:12.5px;fill:var(--muted)}
+.tag{font-size:12.5px;font-weight:650}
+.halo{paint-order:stroke;stroke:var(--board);stroke-width:4px;stroke-linejoin:round}
+.leader{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:650;color:var(--muted);font-size:13px}
+.wrap{overflow-x:auto}
+.note{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 18px;max-width:72ch}
+.note p{margin:0 0 10px}.note p:last-child{margin:0}
+ol{padding-left:22px;max-width:72ch}
+ol li{margin:0 0 8px}
+code{font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <h1>Button and LED on the breadboard</h1>
+    <p class="lede">Arduino Uno R4 on top, breadboard below. The button sits across the centre channel, with legs in rows 41 and 43 on both sides. The used rows are highlighted and the page scrolls, so nothing is cropped.</p>
+  </header>
+
+  <ul class="chips">
+    <li><span class="sw" style="background:#f28a1e"></span>Orange: pin 2 to row 41, left of channel</li>
+    <li><span class="sw" style="background:#e0382f"></span>Red: pin 8 to row 45, left of channel</li>
+    <li><span class="sw" style="background:#8a5a2b"></span>Brown: GND to row 43, right of channel</li>
+  </ul>
+
+  <div class="fig">
+  <svg viewBox="0 0 900 1240" role="img" aria-labelledby="ttl desc">
+    <title id="ttl">Wiring diagram for button and LED</title>
+    <desc id="desc">Arduino Uno R4 above a breadboard. Orange wire from pin 2 to row 41 on the left of the channel, red wire from pin 8 to row 45 on the left, brown wire from GND to row 43 on the right of the channel. The button straddles the channel in rows 41 and 43. A resistor links rows 45 and 51, an LED links rows 51 and 54, and a brown jumper links row 43 on the right to row 54 on the left.</desc>
+
+    <rect x="385" y="6" width="50" height="16" rx="3" fill="#c3c8d0"/>
+    <rect x="110" y="20" width="600" height="460" rx="16" fill="var(--pcb)" stroke="var(--outline)" stroke-opacity=".5"/>
+    <text x="410" y="58" class="atitle">Arduino Uno R4</text>
+    <rect x="350" y="250" width="120" height="120" rx="6" fill="#18181b"/>
+    <text x="410" y="316" class="chip">R4</text>
+    <text x="140" y="76" class="cap">Left: power and analog in (not used)</text>
+    <text x="680" y="76" class="cap" text-anchor="end">Right: digital pins</text>
+    <rect x="140" y="88" width="20" height="336" rx="4" fill="#111"/>
+    <rect x="660" y="88" width="20" height="360" rx="4" fill="#111"/>
+    <g id="pins"></g>
+
+    <rect x="210" y="540" width="400" height="680" rx="12" fill="var(--board)" stroke="var(--line)"/>
+    <g id="stripes"></g>
+    <rect x="385" y="540" width="50" height="680" fill="var(--channel)"/>
+    <text x="410" y="568" class="col">channel</text>
+    <g id="holes"></g>
+    <g id="rowlabels"></g>
+    <g id="cols"></g>
+
+    <g id="resistor">
+      <line x1="310" y1="796" x2="310" y2="852" stroke="var(--metal)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="310" y1="908" x2="310" y2="964" stroke="var(--metal)" stroke-width="3" stroke-linecap="round"/>
+      <rect x="299" y="852" width="22" height="56" rx="8" fill="#5b9bd5" stroke="#2f5f8a"/>
+      <rect x="299" y="862" width="22" height="5" fill="#8c1c1c"/>
+      <rect x="299" y="873" width="22" height="5" fill="#8c1c1c"/>
+      <rect x="299" y="884" width="22" height="5" fill="#6b3d12"/>
+    </g>
+
+    <g id="led">
+      <line x1="340" y1="964" x2="340" y2="1002" stroke="var(--metal)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="340" y1="1034" x2="340" y2="1048" stroke="var(--metal)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="340" cy="1018" r="18" fill="#d92d2d" stroke="#8f1515" stroke-width="1.5"/>
+      <ellipse cx="334" cy="1011" rx="5" ry="4" fill="#ff8f8f" opacity=".6"/>
+      <text x="326" y="984" class="tag" text-anchor="end" fill="var(--fg)">+</text>
+      <text x="326" y="1050" class="tag" text-anchor="end" fill="var(--fg)">−</text>
+    </g>
+
+    <g id="button">
+      <rect x="358" y="681" width="24" height="6" rx="2" fill="var(--metal)"/>
+      <rect x="438" y="681" width="24" height="6" rx="2" fill="var(--metal)"/>
+      <rect x="358" y="737" width="24" height="6" rx="2" fill="var(--metal)"/>
+      <rect x="438" y="737" width="24" height="6" rx="2" fill="var(--metal)"/>
+      <rect x="380" y="676" width="60" height="72" rx="8" fill="#2f2f33" stroke="#0e0e10"/>
+      <circle cx="410" cy="712" r="22" fill="#f2b61f" stroke="#b9820a" stroke-width="1.5"/>
+      <rect x="403" y="705" width="14" height="14" rx="2" fill="#e09a0e"/>
+    </g>
+
+    <g id="wires"></g>
+
+    <text x="522" y="722" class="tag halo" fill="#8a5a2b">brown: GND</text>
+    <text x="172" y="688" class="tag" text-anchor="end" fill="#f28a1e">orange: pin 2</text>
+    <text x="172" y="800" class="tag" text-anchor="end" fill="#e0382f">red: pin 8</text>
+    <text x="470" y="942" class="tag halo" fill="#8a5a2b">brown jumper</text>
+    <text x="470" y="958" class="t2 halo">row 43 right to row 54</text>
+
+    <line x1="612" y1="712" x2="626" y2="712" class="leader"/>
+    <text x="632" y="696" class="t1">Push button</text>
+    <text x="632" y="714" class="t2">legs in rows 41 and 43,</text>
+    <text x="632" y="730" class="t2">left and right of the channel</text>
+
+    <line x1="612" y1="880" x2="626" y2="880" class="leader"/>
+    <text x="632" y="876" class="t1">Resistor</text>
+    <text x="632" y="894" class="t2">row 45 to row 51</text>
+
+    <line x1="612" y1="1018" x2="626" y2="1018" class="leader"/>
+    <text x="632" y="1000" class="t1">LED</text>
+    <text x="632" y="1018" class="t2">long leg (+): row 51</text>
+    <text x="632" y="1034" class="t2">short leg (−): row 54</text>
+  </svg>
+  </div>
+
+  <h2>Where each wire goes</h2>
+  <div class="wrap">
+  <table>
+    <thead><tr><th>Wire</th><th>Arduino end</th><th>Breadboard end</th></tr></thead>
+    <tbody>
+      <tr><td><span class="sw" style="display:inline-block;vertical-align:middle;background:#f28a1e"></span> Orange</td><td>Pin 2</td><td>Row 41, left of the channel (a to e)</td></tr>
+      <tr><td><span class="sw" style="display:inline-block;vertical-align:middle;background:#e0382f"></span> Red</td><td>Pin 8</td><td>Row 45, left of the channel (a to e)</td></tr>
+      <tr><td><span class="sw" style="display:inline-block;vertical-align:middle;background:#8a5a2b"></span> Brown</td><td>GND (top of the right-hand header)</td><td>Row 43, right of the channel (f to j)</td></tr>
+      <tr><td><span class="sw" style="display:inline-block;vertical-align:middle;background:#8a5a2b"></span> Brown, short</td><td>none</td><td>Row 43 on the right to row 54 on the left</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Why GND goes on the right side of the channel</h2>
+  <div class="note">
+    <p>A four-legged button has two pairs of legs that are joined inside. Depending on which way it is turned, the joined legs are either the two on the same side of the channel, or the two in the same row. From a photo I can't tell which way yours is turned.</p>
+    <p>If pin 2 and GND both landed on the left side and the joined legs are on the same side, pin 2 would be tied to GND all the time and the LED would stay on. Putting pin 2 on the left and GND on the right works in either orientation.</p>
+  </div>
+
+  <h2>Build order</h2>
+  <ol>
+    <li>Button across the channel: legs in rows 41 and 43 on the left, and rows 41 and 43 on the right.</li>
+    <li>Resistor: one leg in row 45, the other in row 51, left side.</li>
+    <li>LED: long leg in row 51, short leg in row 54, left side. Row 51 is shared with the resistor, so that joins them.</li>
+    <li>Orange wire: pin 2 to row 41, left side.</li>
+    <li>Red wire: pin 8 to row 45, left side.</li>
+    <li>Brown wire: GND to row 43, right side of the channel.</li>
+    <li>Short brown jumper: row 43 on the right to row 54 on the left.</li>
+    <li>Plug in USB and press the button. The LED should light only while it is held.</li>
+  </ol>
+</main>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  function $(id){return document.getElementById(id);}
+  function el(tag,attrs,parent){
+    var e=document.createElementNS(NS,tag);
+    for(var k in attrs){e.setAttribute(k,attrs[k]);}
+    if(parent){parent.appendChild(e);}
+    return e;
+  }
+  function txt(parent,x,y,s,cls,anchor){
+    var a={x:x,y:y,class:cls};
+    if(anchor){a['text-anchor']=anchor;}
+    var t=el('text',a,parent);
+    t.textContent=s;
+    return t;
+  }
+  var BROWN='#8a5a2b',RED='#e0382f',ORANGE='#f28a1e';
+
+  var pins=$('pins');
+  var rightPins=['GND','13','12','~11','~10','~9','8','7','~6','~5','4','~3','2','1','0'];
+  var usedColor={'GND':BROWN,'8':RED,'2':ORANGE};
+  rightPins.forEach(function(p,i){
+    var y=100+24*i;
+    var c=usedColor[p];
+    if(c){
+      el('circle',{cx:670,cy:y,r:8,fill:c,stroke:'#fff','stroke-width':1.5},pins);
+      txt(pins,650,y+4,p,'pinu','end');
+    }else{
+      el('circle',{cx:670,cy:y,r:4,fill:'#d9c36a'},pins);
+      txt(pins,650,y+4,p,'pin','end');
+    }
+  });
+  var leftPins=[['IOREF',100],['5V',124],['RST',148],['3.3V',172],['5V',196],['GND',220],['VIN',244],['A0',292],['A1',316],['A2',340],['A3',364],['A4',388],['A5',412]];
+  leftPins.forEach(function(p){
+    el('circle',{cx:150,cy:p[1],r:4,fill:'#d9c36a'},pins);
+    txt(pins,170,p[1]+4,p[0],'pin','start');
+  });
+
+  var rowY=function(n){return 600+(n-38)*28;};
+  var LX=[250,280,310,340,370],RX=[450,480,510,540,570];
+  var used=[41,43,45,51,54];
+  var stripes=$('stripes'),holes=$('holes'),rl=$('rowlabels'),cols=$('cols');
+  for(var n=38;n<=58;n++){
+    var y=rowY(n);
+    var u=used.indexOf(n)>-1;
+    if(u){el('rect',{x:210,y:y-12,width:400,height:24,class:'stripe'},stripes);}
+    LX.concat(RX).forEach(function(x){el('circle',{cx:x,cy:y,r:3.5,class:'hole'},holes);});
+    txt(rl,198,y+4,String(n),u?'rowu':'row');
+  }
+  ['a','b','c','d','e'].forEach(function(l,i){txt(cols,LX[i],568,l,'col');txt(cols,LX[i],1206,l,'col');});
+  ['f','g','h','i','j'].forEach(function(l,i){txt(cols,RX[i],568,l,'col');txt(cols,RX[i],1206,l,'col');});
+
+  function rounded(pts,r){
+    var d='M'+pts[0][0]+','+pts[0][1];
+    for(var i=1;i<pts.length-1;i++){
+      var x0=pts[i-1][0],y0=pts[i-1][1],x1=pts[i][0],y1=pts[i][1],x2=pts[i+1][0],y2=pts[i+1][1];
+      var l1=Math.hypot(x1-x0,y1-y0),l2=Math.hypot(x2-x1,y2-y1);
+      var rr=Math.min(r,l1/2,l2/2);
+      var ax=x1-(x1-x0)/l1*rr,ay=y1-(y1-y0)/l1*rr;
+      var bx=x1+(x2-x1)/l2*rr,by=y1+(y2-y1)/l2*rr;
+      d+=' L'+ax+','+ay+' Q'+x1+','+y1+' '+bx+','+by;
+    }
+    var last=pts[pts.length-1];
+    d+=' L'+last[0]+','+last[1];
+    return d;
+  }
+  var wires=$('wires');
+  function drawWire(d,color,end){
+    el('path',{d:d,fill:'none',stroke:'#16181c','stroke-opacity':.55,'stroke-width':7.5,'stroke-linecap':'round'},wires);
+    el('path',{d:d,fill:'none',stroke:color,'stroke-width':4.5,'stroke-linecap':'round'},wires);
+    el('circle',{cx:end[0],cy:end[1],r:5.5,fill:color,stroke:'#16181c','stroke-width':1.5},wires);
+  }
+  drawWire(rounded([[670,100],[770,100],[770,520],[510,520],[510,740]],12),BROWN,[510,740]);
+  drawWire(rounded([[670,244],[745,244],[745,505],[280,505],[280,796]],12),RED,[280,796]);
+  drawWire(rounded([[670,388],[720,388],[720,490],[250,490],[250,684]],12),ORANGE,[250,684]);
+  drawWire('M540,740 C540,900 370,900 370,1048',BROWN,[370,1048]);
+  el('circle',{cx:540,cy:740,r:5.5,fill:BROWN,stroke:'#16181c','stroke-width':1.5},wires);
+})();
+</script>
+</body>
+</html>
